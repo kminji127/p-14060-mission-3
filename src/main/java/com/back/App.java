@@ -152,7 +152,7 @@ public class App {
         WiseSaying savedWiseSaying = save(content, author);
 
         // 결과 출력
-        System.out.println(savedWiseSaying.id + "번 명언이 등록되었습니다.");
+        System.out.println(savedWiseSaying.getId() + "번 명언이 등록되었습니다.");
     }
 
     private WiseSaying save(String content, String author) {
@@ -192,7 +192,7 @@ public class App {
         System.out.println("----------------------");
         for (int i = wiseSayingList.size() - 1; i >= 0; i--) {
             WiseSaying wiseSaying = wiseSayingList.get(i);
-            System.out.println(wiseSaying.id + " / " + wiseSaying.author + " / " + wiseSaying.content);
+            System.out.println(wiseSaying.getId() + " / " + wiseSaying.getAuthor() + " / " + wiseSaying.getContent());
         }
     }
 
@@ -202,16 +202,16 @@ public class App {
 
         // 해당 id에 해당하는 리스트 원소가 있으면 수정
         for (WiseSaying wiseSaying : wiseSayingList) {
-            if (wiseSaying.id == id) {
-                System.out.println("명언(기존): " + wiseSaying.content);
+            if (wiseSaying.getId() == id) {
+                System.out.println("명언(기존): " + wiseSaying.getContent());
                 System.out.print("명언 : ");
                 String newContent = sc.nextLine();
-                wiseSaying.content = newContent; // 객체 값 바꾸기
+                wiseSaying.setContent(newContent); // 객체 값 바꾸기
 
-                System.out.println("작가(기존): " + wiseSaying.author);
+                System.out.println("작가(기존): " + wiseSaying.getAuthor());
                 System.out.print("작가 : ");
                 String newAuthor = sc.nextLine();
-                wiseSaying.author = newAuthor; // 객체 값 바꾸기
+                wiseSaying.setAuthor(newAuthor); // 객체 값 바꾸기
 
                 // 파일 내용 바꾸기
                 Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
@@ -237,7 +237,7 @@ public class App {
 
         // 해당 id에 해당하는 리스트 원소가 있으면 삭제
         for (int i = wiseSayingList.size() - 1; i >= 0; i--) { // 삭제되면 리스트 뒤의 요소들이 앞으로 당겨지므로 뒤에서부터 순회
-            if (wiseSayingList.get(i).id == id) {
+            if (wiseSayingList.get(i).getId() == id) {
                 wiseSayingList.remove(i);
 
                 // 파일 삭제
@@ -267,7 +267,7 @@ public class App {
             fileWriter.write("[\n");
             for (int i = 0; i < wiseSayingList.size(); i++) {
                 WiseSaying wiseSaying = wiseSayingList.get(i);
-                String json = ("  {\n    \"id\": %d,\n    \"content\": \"%s\",\n    \"author\": \"%s\"\n  }").formatted(wiseSaying.id, wiseSaying.content, wiseSaying.author);
+                String json = ("  {\n    \"id\": %d,\n    \"content\": \"%s\",\n    \"author\": \"%s\"\n  }").formatted(wiseSaying.getId(), wiseSaying.getContent(), wiseSaying.getAuthor());
                 fileWriter.write(json);
                 // 마지막 요소에는 쉼표와 줄바꿈 하지 않음
                 if (i < wiseSayingList.size() - 1) {
