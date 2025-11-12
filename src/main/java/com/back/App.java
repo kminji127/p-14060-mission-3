@@ -56,28 +56,10 @@ public class App {
                     continue; // 다시 반복문(명령어 입력)으로 돌아감
                 }
 
-                boolean isDeleted = false;
+                // 실제 삭제 로직
+                boolean isIdExistsAndDeleted = deleteWiseSaying(targetId);
 
-                // 해당 id에 해당하는 리스트 원소가 있으면 삭제
-                for (int i = wiseSayingList.size() - 1; i >= 0; i--) { // 삭제되면 리스트 뒤의 요소들이 앞으로 당겨지므로 뒤에서부터 순회
-                    if (wiseSayingList.get(i).id == targetId) {
-                        wiseSayingList.remove(i);
-
-                        // 파일 삭제
-                        Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(targetId));
-                        if (Files.exists(wiseSayingPath)) {
-                            try {
-                                Files.delete(wiseSayingPath);
-                            } catch (Exception e) {
-                                System.out.println("파일 삭제 실패" + e);
-                            }
-                        }
-                        isDeleted = true;
-                        break;
-                    }
-                }
-
-                if (isDeleted) {
+                if (isIdExistsAndDeleted) {
                     System.out.println(targetId + "번 명언이 삭제되었습니다.");
                 } else {
                     // 리스트가 빈 값이라도 예외 처리
@@ -259,5 +241,31 @@ public class App {
             WiseSaying wiseSaying = wiseSayingList.get(i);
             System.out.println(wiseSaying.id + " / " + wiseSaying.author + " / " + wiseSaying.content);
         }
+    }
+
+    // 삭제 (D)
+    boolean deleteWiseSaying(int id) {
+        boolean isIdExistsAndDeleted = false;
+
+        // 해당 id에 해당하는 리스트 원소가 있으면 삭제
+        for (int i = wiseSayingList.size() - 1; i >= 0; i--) { // 삭제되면 리스트 뒤의 요소들이 앞으로 당겨지므로 뒤에서부터 순회
+            if (wiseSayingList.get(i).id == id) {
+                wiseSayingList.remove(i);
+
+                // 파일 삭제
+                Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
+                if (Files.exists(wiseSayingPath)) {
+                    try {
+                        Files.delete(wiseSayingPath);
+                    } catch (Exception e) {
+                        System.out.println("파일 삭제 실패" + e);
+                    }
+                }
+                isIdExistsAndDeleted = true;
+                break;
+            }
+        }
+
+        return isIdExistsAndDeleted;
     }
 }
