@@ -36,39 +36,7 @@ public class App {
             if (cmd.equals("종료")) {
                 break;
             } else if (cmd.equals("등록")) {
-                // 명언, 작가 입력
-                System.out.print("명언 : ");
-                String content = sc.nextLine().trim();
-
-                System.out.print("작가 : ");
-                String author = sc.nextLine().trim();
-
-                // 등록
-                id++;
-                wiseSayingList.add(new WiseSaying(id, content, author));
-                System.out.println(id + "번 명언이 등록되었습니다.");
-
-                // 명언 정보를 json 파일로 저장
-                Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
-                File wiseSayingFile = new File(wiseSayingPath.toString());
-                String json = "{\n  \"id\": %d,\n  \"content\": \"%s\",\n  \"author\": \"%s\"\n}".formatted(id, content, author);
-                try {
-                    FileWriter fileWriter = new FileWriter(wiseSayingFile);
-                    fileWriter.write(json);
-                    fileWriter.close();
-                } catch (IOException e) {
-                    System.out.println("파일 저장 실패" + e);
-                }
-
-                // 가장 마지막에 생성된 명언 번호 저장
-                try {
-                    File idFile = new File(idPath.toString());
-                    FileWriter fileWriter = new FileWriter(idFile);
-                    fileWriter.write(Integer.toString(id));
-                    fileWriter.close();
-                } catch (IOException e) {
-                    System.out.println("파일 저장 실패" + e);
-                }
+                createWiseSaying();
             } else if (cmd.equals("목록")) {
                 System.out.println("번호 / 작가 / 명언");
                 System.out.println("----------------------");
@@ -238,6 +206,43 @@ public class App {
                     System.out.println("ID 파일 읽기 실패" + e);
                 }
             }
+        }
+    }
+
+    // 등록 (C)
+    void createWiseSaying() {
+        // 명언, 작가 입력
+        System.out.print("명언 : ");
+        String content = sc.nextLine().trim();
+
+        System.out.print("작가 : ");
+        String author = sc.nextLine().trim();
+
+        // 등록
+        id++;
+        wiseSayingList.add(new WiseSaying(id, content, author));
+        System.out.println(id + "번 명언이 등록되었습니다.");
+
+        // 명언 정보를 json 파일로 저장
+        Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
+        File wiseSayingFile = new File(wiseSayingPath.toString());
+        String json = "{\n  \"id\": %d,\n  \"content\": \"%s\",\n  \"author\": \"%s\"\n}".formatted(id, content, author);
+        try {
+            FileWriter fileWriter = new FileWriter(wiseSayingFile);
+            fileWriter.write(json);
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("파일 저장 실패" + e);
+        }
+
+        // 가장 마지막에 생성된 명언 번호 저장
+        try {
+            File idFile = new File(idPath.toString());
+            FileWriter fileWriter = new FileWriter(idFile);
+            fileWriter.write(Integer.toString(id));
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("파일 저장 실패" + e);
         }
     }
 }
