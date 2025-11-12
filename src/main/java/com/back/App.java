@@ -218,10 +218,18 @@ public class App {
         System.out.print("작가 : ");
         String author = sc.nextLine().trim();
 
-        // 등록
+        // 실제 등록 로직
+        WiseSaying savedWiseSaying = save(content, author);
+
+        // 결과 출력
+        System.out.println(savedWiseSaying.id + "번 명언이 등록되었습니다.");
+    }
+
+    WiseSaying save(String content, String author) {
         id++;
-        wiseSayingList.add(new WiseSaying(id, content, author));
-        System.out.println(id + "번 명언이 등록되었습니다.");
+        // 리스트 객체에 추가
+        WiseSaying wiseSaying = new WiseSaying(id, content, author);
+        wiseSayingList.add(wiseSaying);
 
         // 명언 정보를 json 파일로 저장
         Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
@@ -244,5 +252,7 @@ public class App {
         } catch (IOException e) {
             System.out.println("파일 저장 실패" + e);
         }
+
+        return wiseSaying;
     }
 }
