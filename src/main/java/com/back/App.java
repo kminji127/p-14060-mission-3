@@ -66,8 +66,6 @@ public class App {
                     System.out.println(targetId + "번 명언은 존재하지 않습니다.");
                 }
             } else if (cmd.startsWith("수정?id=")) {
-                // 탐색 여부
-                boolean isFound = false;
                 // id 파악
                 String[] cmdBits = cmd.split("=", 2);
                 if (cmdBits.length < 2 || cmdBits[1].isEmpty()) {
@@ -84,35 +82,10 @@ public class App {
                     continue; // 다시 반복문(명령어 입력)으로 돌아감
                 }
 
-                // 해당 id에 해당하는 리스트 원소가 있으면 수정
-                for (WiseSaying wiseSaying : wiseSayingList) {
-                    if (wiseSaying.id == targetId) {
-                        isFound = true;
-                        System.out.println("명언(기존): " + wiseSaying.content);
-                        System.out.print("명언 : ");
-                        String newContent = sc.nextLine();
-                        wiseSaying.content = newContent; // 객체 값 바꾸기
+                // 실제 수정 로직
+                boolean isIdExistsAndUpdated = updateWiseSaying(targetId);
 
-                        System.out.println("작가(기존): " + wiseSaying.author);
-                        System.out.print("작가 : ");
-                        String newAuthor = sc.nextLine();
-                        wiseSaying.author = newAuthor; // 객체 값 바꾸기
-
-                        // 파일 내용 바꾸기
-                        Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(targetId));
-                        File wiseSayingFile = new File(wiseSayingPath.toString());
-                        String json = "{\n  \"id\": %d,\n  \"content\": \"%s\",\n  \"author\": \"%s\"\n}".formatted(targetId, newContent, newAuthor);
-                        try {
-                            FileWriter fileWriter = new FileWriter(wiseSayingFile);
-                            fileWriter.write(json);
-                            fileWriter.close();
-                        } catch (IOException e) {
-                            System.out.println("파일 수정 실패" + e);
-                        }
-                        break;
-                    }
-                }
-                if (!isFound) {
+                if (!isIdExistsAndUpdated) {
                     System.out.println(targetId + "번 명언은 존재하지 않습니다.");
                 }
             } else if (cmd.equals("빌드")) {
@@ -241,6 +214,41 @@ public class App {
             WiseSaying wiseSaying = wiseSayingList.get(i);
             System.out.println(wiseSaying.id + " / " + wiseSaying.author + " / " + wiseSaying.content);
         }
+    }
+
+    // 수정 (U)
+    boolean updateWiseSaying(int id) {
+        boolean isIdExistsAndUpdated = false;
+
+        // 해당 id에 해당하는 리스트 원소가 있으면 수정
+        for (WiseSaying wiseSaying : wiseSayingList) {
+            if (wiseSaying.id == id) {
+                System.out.println("명언(기존): " + wiseSaying.content);
+                System.out.print("명언 : ");
+                String newContent = sc.nextLine();
+                wiseSaying.content = newContent; // 객체 값 바꾸기
+
+                System.out.println("작가(기존): " + wiseSaying.author);
+                System.out.print("작가 : ");
+                String newAuthor = sc.nextLine();
+                wiseSaying.author = newAuthor; // 객체 값 바꾸기
+
+                // 파일 내용 바꾸기
+                Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(id));
+                File wiseSayingFile = new File(wiseSayingPath.toString());
+                String json = "{\n  \"id\": %d,\n  \"content\": \"%s\",\n  \"author\": \"%s\"\n}".formatted(id, newContent, newAuthor);
+                try {
+                    FileWriter fileWriter = new FileWriter(wiseSayingFile);
+                    fileWriter.write(json);
+                    fileWriter.close();
+                } catch (IOException e) {
+                    System.out.println("파일 수정 실패" + e);
+                }
+                isIdExistsAndUpdated = true;
+                break;
+            }
+        }
+        return isIdExistsAndUpdated;
     }
 
     // 삭제 (D)
