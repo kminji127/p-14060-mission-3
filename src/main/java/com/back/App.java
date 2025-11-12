@@ -12,57 +12,19 @@ import java.util.List;
 import java.util.Scanner;
 
 public class App {
+    // 입력 스캐너
+    Scanner sc = new Scanner(System.in);
+    // 등록 번호
+    int id = 0;
+    // 파일 경로
+    Path basePath = Paths.get("db", "wiseSaying");
+    Path idPath = Paths.get(String.valueOf(basePath), "lastId.txt");
+    // 입력된 명언 리스트
+    List<WiseSaying> wiseSayingList = new ArrayList<>();
+
     void run() {
         System.out.println("== 명언 앱 ==");
-        Scanner sc = new Scanner(System.in);
-
-        // 등록 번호
-        int id = 0;
-
-        Path basePath = Paths.get("db", "wiseSaying");
-        Path idPath = Paths.get(String.valueOf(basePath), "lastId.txt");
-        // 마지막에 생성된 명언 번호 파일이 있고 유효하면 해당 숫자로 변경
-        if (Files.exists(idPath)) {
-            try {
-                BufferedReader bufferedReader = Files.newBufferedReader(idPath);
-                id = Integer.parseInt(bufferedReader.readLine());
-                bufferedReader.close();
-            } catch (IOException e) {
-                System.out.println("ID 파일 읽기 실패" + e);
-            } catch (NumberFormatException e) {
-                System.out.println("정수 변환 실패(유효한 형식이 아님)" + e);
-            }
-        }
-
-        // 입력된 명언 리스트
-        List<WiseSaying> wiseSayingList = new ArrayList<>();
-
-        // 시작 전 이미 저장된 명언은 리스트에 저장
-        for (int i = 1; i <= id; i++) {
-            Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(i));
-            if (Files.exists(wiseSayingPath)) {
-                try {
-                    BufferedReader bufferedReader = Files.newBufferedReader(wiseSayingPath);
-                    bufferedReader.readLine(); // 중괄호만 있는 첫 줄 생략
-
-                    String line;
-                    line = bufferedReader.readLine();
-                    int wiseSayingId = Integer.parseInt(line.substring(8, line.length() - 1));
-
-                    line = bufferedReader.readLine();
-                    String wiseSayingContent = line.substring(14, line.length() - 2);
-
-                    line = bufferedReader.readLine();
-                    String wiseSayingAuthor = line.substring(13, line.length() - 1);
-
-                    wiseSayingList.add(new WiseSaying(wiseSayingId, wiseSayingContent, wiseSayingAuthor));
-
-                    bufferedReader.close();
-                } catch (IOException e) {
-                    System.out.println("ID 파일 읽기 실패" + e);
-                }
-            }
-        }
+        init();
 
         // 종료하기 전까지 반복
         while (true) {
@@ -229,6 +191,51 @@ public class App {
                     System.out.println("data.json 파일의 내용이 갱신되었습니다.");
                 } catch (IOException e) {
                     System.out.println("파일 수정 실패" + e);
+                }
+            }
+        }
+
+        sc.close();
+    }
+
+    // 초기 설정
+    void init() {
+        // 마지막에 생성된 명언 번호 파일이 있고 유효하면 해당 숫자로 변경
+        if (Files.exists(idPath)) {
+            try {
+                BufferedReader bufferedReader = Files.newBufferedReader(idPath);
+                id = Integer.parseInt(bufferedReader.readLine());
+                bufferedReader.close();
+            } catch (IOException e) {
+                System.out.println("ID 파일 읽기 실패" + e);
+            } catch (NumberFormatException e) {
+                System.out.println("정수 변환 실패(유효한 형식이 아님)" + e);
+            }
+        }
+
+        // 시작 전 이미 저장된 명언은 리스트에 저장
+        for (int i = 1; i <= id; i++) {
+            Path wiseSayingPath = Paths.get(String.valueOf(basePath), "%d.json".formatted(i));
+            if (Files.exists(wiseSayingPath)) {
+                try {
+                    BufferedReader bufferedReader = Files.newBufferedReader(wiseSayingPath);
+                    bufferedReader.readLine(); // 중괄호만 있는 첫 줄 생략
+
+                    String line;
+                    line = bufferedReader.readLine();
+                    int wiseSayingId = Integer.parseInt(line.substring(8, line.length() - 1));
+
+                    line = bufferedReader.readLine();
+                    String wiseSayingContent = line.substring(14, line.length() - 2);
+
+                    line = bufferedReader.readLine();
+                    String wiseSayingAuthor = line.substring(13, line.length() - 1);
+
+                    wiseSayingList.add(new WiseSaying(wiseSayingId, wiseSayingContent, wiseSayingAuthor));
+
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    System.out.println("ID 파일 읽기 실패" + e);
                 }
             }
         }
