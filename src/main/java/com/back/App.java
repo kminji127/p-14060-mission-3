@@ -38,12 +38,7 @@ public class App {
             } else if (cmd.equals("등록")) {
                 createWiseSaying();
             } else if (cmd.equals("목록")) {
-                System.out.println("번호 / 작가 / 명언");
-                System.out.println("----------------------");
-                for (int i = wiseSayingList.size() - 1; i >= 0; i--) {
-                    WiseSaying wiseSaying = wiseSayingList.get(i);
-                    System.out.println(wiseSaying.id + " / " + wiseSaying.author + " / " + wiseSaying.content);
-                }
+                getWiseSaying();
             } else if (cmd.startsWith("삭제?id=")) {
                 // id 파악
                 String[] cmdBits = cmd.split("=", 2);
@@ -254,5 +249,15 @@ public class App {
         }
 
         return wiseSaying;
+    }
+
+    // 목록 (R)
+    void getWiseSaying() {
+        System.out.println("번호 / 작가 / 명언");
+        System.out.println("----------------------");
+        for (int i = wiseSayingList.size() - 1; i >= 0; i--) {
+            WiseSaying wiseSaying = wiseSayingList.get(i);
+            System.out.println(wiseSaying.id + " / " + wiseSaying.author + " / " + wiseSaying.content);
+        }
     }
 }
