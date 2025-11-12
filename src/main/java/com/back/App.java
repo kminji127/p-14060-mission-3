@@ -89,27 +89,7 @@ public class App {
                     System.out.println(targetId + "번 명언은 존재하지 않습니다.");
                 }
             } else if (cmd.equals("빌드")) {
-                // 지금까지 저장된 명언을 json 배열로 저장
-                Path jsonPath = Paths.get(String.valueOf(basePath), "data.json");
-                File jsonFile = new File(jsonPath.toString());
-                try {
-                    FileWriter fileWriter = new FileWriter(jsonFile);
-                    fileWriter.write("[\n");
-                    for (int i = 0; i < wiseSayingList.size(); i++) {
-                        WiseSaying wiseSaying = wiseSayingList.get(i);
-                        String json = ("  {\n    \"id\": %d,\n    \"content\": \"%s\",\n    \"author\": \"%s\"\n  }").formatted(wiseSaying.id, wiseSaying.content, wiseSaying.author);
-                        fileWriter.write(json);
-                        // 마지막 요소에는 쉼표와 줄바꿈 하지 않음
-                        if (i < wiseSayingList.size() - 1) {
-                            fileWriter.write(",\n");
-                        }
-                    }
-                    fileWriter.write("\n]");
-                    fileWriter.close();
-                    System.out.println("data.json 파일의 내용이 갱신되었습니다.");
-                } catch (IOException e) {
-                    System.out.println("파일 수정 실패" + e);
-                }
+                buildWiseSaying();
             }
         }
 
@@ -275,5 +255,30 @@ public class App {
         }
 
         return isIdExistsAndDeleted;
+    }
+
+    // 빌드
+    void buildWiseSaying() {
+        // 지금까지 저장된 명언을 json 배열로 저장
+        Path jsonPath = Paths.get(String.valueOf(basePath), "data.json");
+        File jsonFile = new File(jsonPath.toString());
+        try {
+            FileWriter fileWriter = new FileWriter(jsonFile);
+            fileWriter.write("[\n");
+            for (int i = 0; i < wiseSayingList.size(); i++) {
+                WiseSaying wiseSaying = wiseSayingList.get(i);
+                String json = ("  {\n    \"id\": %d,\n    \"content\": \"%s\",\n    \"author\": \"%s\"\n  }").formatted(wiseSaying.id, wiseSaying.content, wiseSaying.author);
+                fileWriter.write(json);
+                // 마지막 요소에는 쉼표와 줄바꿈 하지 않음
+                if (i < wiseSayingList.size() - 1) {
+                    fileWriter.write(",\n");
+                }
+            }
+            fileWriter.write("\n]");
+            fileWriter.close();
+            System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+        } catch (IOException e) {
+            System.out.println("파일 수정 실패" + e);
+        }
     }
 }
