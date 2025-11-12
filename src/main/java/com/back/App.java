@@ -13,14 +13,14 @@ import java.util.Scanner;
 
 public class App {
     // 입력 스캐너
-    Scanner sc = new Scanner(System.in);
+    private final Scanner sc = new Scanner(System.in);
     // 등록 번호
-    int id = 0;
+    private int id = 0;
     // 파일 경로
-    Path basePath = Paths.get("db", "wiseSaying");
-    Path idPath = Paths.get(String.valueOf(basePath), "lastId.txt");
+    private final Path basePath = Paths.get("db", "wiseSaying");
+    private final Path idPath = Paths.get(String.valueOf(basePath), "lastId.txt");
     // 입력된 명언 리스트
-    List<WiseSaying> wiseSayingList = new ArrayList<>();
+    private final List<WiseSaying> wiseSayingList = new ArrayList<>();
 
     void run() {
         System.out.println("== 명언 앱 ==");
@@ -97,7 +97,7 @@ public class App {
     }
 
     // 초기 설정
-    void init() {
+    private void init() {
         // 마지막에 생성된 명언 번호 파일이 있고 유효하면 해당 숫자로 변경
         if (Files.exists(idPath)) {
             try {
@@ -140,7 +140,7 @@ public class App {
     }
 
     // 등록 (C)
-    void createWiseSaying() {
+    private void createWiseSaying() {
         // 명언, 작가 입력
         System.out.print("명언 : ");
         String content = sc.nextLine().trim();
@@ -155,7 +155,7 @@ public class App {
         System.out.println(savedWiseSaying.id + "번 명언이 등록되었습니다.");
     }
 
-    WiseSaying save(String content, String author) {
+    private WiseSaying save(String content, String author) {
         id++;
         // 리스트 객체에 추가
         WiseSaying wiseSaying = new WiseSaying(id, content, author);
@@ -187,7 +187,7 @@ public class App {
     }
 
     // 목록 (R)
-    void getWiseSaying() {
+    private void getWiseSaying() {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
         for (int i = wiseSayingList.size() - 1; i >= 0; i--) {
@@ -197,7 +197,7 @@ public class App {
     }
 
     // 수정 (U)
-    boolean updateWiseSaying(int id) {
+    private boolean updateWiseSaying(int id) {
         boolean isIdExistsAndUpdated = false;
 
         // 해당 id에 해당하는 리스트 원소가 있으면 수정
@@ -232,7 +232,7 @@ public class App {
     }
 
     // 삭제 (D)
-    boolean deleteWiseSaying(int id) {
+    private boolean deleteWiseSaying(int id) {
         boolean isIdExistsAndDeleted = false;
 
         // 해당 id에 해당하는 리스트 원소가 있으면 삭제
@@ -258,7 +258,7 @@ public class App {
     }
 
     // 빌드
-    void buildWiseSaying() {
+    private void buildWiseSaying() {
         // 지금까지 저장된 명언을 json 배열로 저장
         Path jsonPath = Paths.get(String.valueOf(basePath), "data.json");
         File jsonFile = new File(jsonPath.toString());
