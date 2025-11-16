@@ -1,15 +1,12 @@
 package com.back;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor // 모든 필드 생성자
 public class WiseSaying {
     private int id;
     private String content;
     private String author;
-
-    public WiseSaying(int id, String content, String author) {
-        this.id = id;
-        this.content = content;
-        this.author = author;
-    }
 
     public int getId() {
         // 같은 이름의 지역 변수나 매개변수가 없으면 this 생략 가능
